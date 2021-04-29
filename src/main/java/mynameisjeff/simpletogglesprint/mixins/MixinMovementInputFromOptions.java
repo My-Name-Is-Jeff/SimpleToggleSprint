@@ -39,7 +39,7 @@ public class MixinMovementInputFromOptions extends MovementInput {
     @Unique private final Minecraft mc = Minecraft.getMinecraft();
 
     @Redirect(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
-    private boolean setSneakDownState(KeyBinding keyBinding) {
+    private boolean setSneakState(KeyBinding keyBinding) {
         return Config.enabledToggleSneak && Config.toggleSneakState && keyBinding == this.gameSettings.keyBindSneak && mc.currentScreen == null || keyBinding.isKeyDown();
     }
 

@@ -33,7 +33,7 @@ public class MixinEntityPlayerSP {
     protected Minecraft mc;
 
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
-    private boolean setSprintDownState(KeyBinding keyBinding) {
+    private boolean setSprintState(KeyBinding keyBinding) {
         return Config.enabledToggleSprint && Config.toggleSprintState && keyBinding == this.mc.gameSettings.keyBindSprint && mc.currentScreen == null || keyBinding.isKeyDown();
     }
 }

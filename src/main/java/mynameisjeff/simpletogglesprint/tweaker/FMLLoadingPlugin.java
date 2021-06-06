@@ -18,6 +18,7 @@
 
 package mynameisjeff.simpletogglesprint.tweaker;
 
+import club.sk1er.modcore.ModCoreInstaller;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
@@ -38,17 +39,6 @@ public class FMLLoadingPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        int initialize = ModCoreInstaller.initialize(Launch.minecraftHome, "1.8.9");
-
-        if (ModCoreInstaller.isErrored() || initialize != 0 && initialize != -1) {
-            System.out.println("Failed to load Sk1er Modcore - " + initialize + " - " + ModCoreInstaller.getError());
-        }
-        // If true the classes are loaded
-        if (ModCoreInstaller.isIsRunningModCore()) {
-            // register ModCore's class transformer
-            return new String[]{"club.sk1er.mods.core.forge.ClassTransformer"};
-        }
-
         return new String[]{};
     }
 

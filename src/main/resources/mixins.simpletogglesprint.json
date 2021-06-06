@@ -4,7 +4,6 @@
   "refmap": "mixins.simpletogglesprint.refmap.json",
   "mixins": [
     "MixinEntityPlayerSP",
-    "MixinGuiIngameMenu",
     "MixinMovementInputFromOptions"
   ],
   "verbose": true

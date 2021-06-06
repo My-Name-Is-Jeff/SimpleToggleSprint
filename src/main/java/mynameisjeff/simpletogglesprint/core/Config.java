@@ -24,7 +24,16 @@ import club.sk1er.vigilance.data.PropertyType;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 public class Config extends Vigilant {
+
+    @Property(
+            type = PropertyType.TEXT,
+            name = "HUD",
+            category = "General",
+            description = "THERE IS NO OPTION TO MANAGE THE HUD HERE, CHANGE THE HUD BY TYPING /evergreenhud"
+    )
+    public static String placeholderText;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -86,122 +95,13 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Enabled",
-            category = "Display",
-            description = "Displays the toggle states on your HUD."
+            name = "First Load",
+            category = "General", hidden = true
     )
-    public static boolean displayToggleState = true;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Show in GUIs",
-            category = "Display"
-    )
-    public static boolean showInGui;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Display Background",
-            category = "Display",
-            description = "Display a background."
-    )
-    public static boolean displayBackground;
-
-    @Property(
-            type = PropertyType.SELECTOR,
-            name = "Color",
-            category = "Color", subcategory = "Simple",
-            description = "Choose a color for the HUD.",
-            options = {"White", "Light Gray", "Gray", "Dark Gray", "Black", "Red", "Pink", "Orange", "Yellow", "Green", "Magenta", "Cyan", "Blue", "Chroma"}
-    )
-    public static int simpleColor;
-
-    @Property(
-            type = PropertyType.SELECTOR,
-            name = "Use Simple or Advanced Color",
-            category = "Color",
-            description = "Use the Simple or Advanced option for the Color selection.",
-            options = {"Simple", "Advanced"}
-    )
-    public static int isAdvanced;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Red",
-            category = "Color", subcategory = "Advanced",
-            description = "Change the red value for the color of the display.",
-            max = 255
-    )
-    public static int displayStateRed = 255;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Green",
-            category = "Color", subcategory = "Advanced",
-            description = "Change the green value for the color of the display.",
-            max = 255
-    )
-    public static int displayStateGreen = 255;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Blue",
-            category = "Color", subcategory = "Advanced",
-            description = "Change the blue value for the color of the display.",
-            max = 255
-    )
-    public static int displayStateBlue = 255;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "X",
-            category = "Display", subcategory = "Position",
-            description = "Change the X value for the state display. Based on a percentage of your screen.",
-            max = 1000
-    )
-    public static int displayStateX = 2;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Y",
-            category = "Display", subcategory = "Position",
-            description = "Change the Y value for the state display. Based on a percentage of your screen.",
-            max = 1000
-    )
-    public static int displayStateY = 974;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Scale",
-            category = "Display", subcategory = "Options",
-            description = "Change the scale for the state display, this is a percentage.",
-            max = 5000
-    )
-    public static int displayStateScale = 1085;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Text Shadow",
-            category = "Display", subcategory = "Options",
-            description = "Change whether or not the display has text shadow."
-    )
-    public static boolean displayStateShadow = true;
-
-    @Property(
-            type = PropertyType.SELECTOR,
-            name = "Text Alignment",
-            category = "Display", subcategory = "Options",
-            description = "Changes the text alignment settings for the state display.",
-            options = {
-                    "Left-Right",
-                    "Center",
-                    "Right-Left"
-            }
-    )
-    public static int displayStateAlignment = 0;
+    public static boolean firstLoad;
 
     public Config() {
-        super(new File("./config/simpletogglesprint.toml"));
+        super(new File("./config/greentogglesprint.toml"));
         initialize();
     }
 }

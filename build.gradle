@@ -25,7 +25,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "1.1"
+version = "1.0"
 group = "mynameisjeff.simpletogglesprint"
 archivesBaseName = "SimpleToggleSprint"
 
@@ -37,6 +37,7 @@ minecraft {
     mappings = "stable_22"
     makeObfSourceJar = false
     clientJvmArgs += "-Dfml.coreMods.load=mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin"
+    clientRunArgs += "--tweakClass org.spongepowered.asm.launch.MixinTweaker"
     clientRunArgs += "--mixin mixins.simpletogglesprint.json"
 }
 
@@ -47,12 +48,16 @@ repositories {
 
 
 dependencies {
-    compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        exclude module: 'guava'
-        exclude module: 'commons-io'
-        exclude module: 'gson'
+    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        transitive = false
+        exclude module: "guava"
+        exclude module: "commons-io"
+        exclude module: "gson"
+        exclude module: "launchwrapper"
+        exclude module: "log4j-core"
     }
-    provided files("libs/modcore.jar")
+    annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+    provided files("libs/evergreen.jar")
 }
 
 mixin {
@@ -69,8 +74,7 @@ jar {
             "ForceLoadAsMod": true,
             "MixinConfigs": "mixins.simpletogglesprint.json",
             "ModSide": "CLIENT",
-            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-            "TweakOrder": "0",
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
     )
 }
 
@@ -84,8 +88,10 @@ shadowJar {
     exclude 'dummyThing'
     exclude 'LICENSE.txt'
     exclude 'modcore.jar'
+    exclude 'evergreen.jar'
+	exclude 'xanderlib.jar'
 
-    classifier = "-working"
+    classifier = "" //NO MORE TGM
 }
 
 reobf {
@@ -101,15 +107,6 @@ task runClientFix {
         ant.delete file: "${buildDir}/libs/${archivesBaseName}-${version}.jar"
     }
 }
-
-runClient {
-    standardInput = System.in
-}
-
-build.dependsOn(shadowJar)
-runClient.dependsOn(build)
-runClient.dependsOn(runClientFix)
-
 processResources
         {
             inputs.property "version", project.version
@@ -124,3 +121,15 @@ processResources
                 exclude 'mcmod.info'
             }
         }
+
+task moveResources {
+    doLast {
+        ant.move file: "${buildDir}/resources/main",
+                todir: "${buildDir}/classes/java"
+    }
+}
+
+build.dependsOn(shadowJar)
+runClient.dependsOn(build)
+moveResources.dependsOn processResources
+classes.dependsOn moveResources

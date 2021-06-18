@@ -18,7 +18,6 @@
 
 package mynameisjeff.simpletogglesprint.mixins;
 
-import club.sk1er.mods.core.ModCore;
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint;
 import mynameisjeff.simpletogglesprint.core.Config;
 import net.minecraft.client.gui.GuiButton;
@@ -46,7 +45,9 @@ public abstract class MixinGuiIngameMenu extends GuiScreen {
     @Inject(method = "actionPerformed", at = @At("TAIL"))
     private void onButtonPress(GuiButton button, CallbackInfo ci) {
         if (button == configButton) {
-            ModCore.getInstance().getGuiHandler().open(SimpleToggleSprint.config.gui());
+            SimpleToggleSprint.thread.submit(() -> {
+                SimpleToggleSprint.displayScreen = SimpleToggleSprint.config.gui();
+            });
         }
     }
 

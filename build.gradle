@@ -13,48 +13,60 @@ buildscript {
     }
     dependencies {
         classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
-        classpath "com.github.Skytils:ForgeGradle:8f14deb"
-        classpath "com.github.Skytils:mixingradle:d5f9873d60"
+        classpath "net.minecraftforge.gradle:ForgeGradle:4.1.+"
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
     }
 }
 
 apply plugin: "java"
-apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "net.minecraftforge.gradle"
 apply plugin: "org.spongepowered.mixin"
 apply plugin: "com.github.johnrengelman.shadow"
 
-version = "1.2"
+version = "1.0"
 group = "mynameisjeff.simpletogglesprint"
-archivesBaseName = "SimpleToggleSprint"
+archivesBaseName = "SimpleToggleSprint-1.12.2"
 
 sourceCompatibility = targetCompatibility = 1.8
+compileJava.options.encoding = "UTF-8"
 
 minecraft {
-    version = "1.8.9-11.15.1.2318-1.8.9"
-    runDir = "run"
-    mappings = "stable_22"
-    makeObfSourceJar = false
-    clientJvmArgs += "-Dfml.coreMods.load=mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin"
-    clientRunArgs += "--mixin mixins.simpletogglesprint.json"
+    mappings channel: "stable", version: "39-1.12"
+    runs {
+        client {
+            workingDirectory project.file("run")
+            args = ["--mixin mixins.simpletogglesprint.json"]
+            jvmArgs = ["-Dmixin.debug.export=true", "-Dfml.coreMods.load=mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin"]
+
+            // Recommended logging data for a userdev environment
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+
+            // Recommended logging level for the console
+            property "forge.logging.console.level", "debug"
+        }
+    }
 }
 
 repositories {
     mavenCentral()
     maven { url "https://repo.spongepowered.org/repository/maven-public/" }
+    maven { url "https://repo.sk1er.club/repository/maven-public/" }
+}
+
+configurations {
+    include
+    implementation.extendsFrom(include)
 }
 
 dependencies {
-    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        transitive = false
-        exclude module: "guava"
-        exclude module: "commons-io"
-        exclude module: "gson"
-        exclude module: "launchwrapper"
-        exclude module: "log4j-core"
-    }
-    annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+    minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2855"
 
-    provided files("libs/modcore.jar")
+    include("org.spongepowered:mixin:0.8.3-SNAPSHOT") {
+        transitive = false
+    }
+    annotationProcessor("org.spongepowered:mixin:0.8.3-SNAPSHOT:processor")
+
+    include("gg.essential:Vigilance:123-11202-SNAPSHOT")
 }
 
 mixin {
@@ -74,40 +86,56 @@ jar {
             "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "TweakOrder": "0",
     )
+
     enabled = false
+}
+
+reobf {
+    shadowJar {}
 }
 
 shadowJar {
     archiveFileName = jar.archiveFileName
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    exclude "**/module-info.class"
+    configurations = [project.configurations.include]
+    exclude "LICENSE.md"
     exclude "dummyThing"
-    exclude "modcore.jar"
-}
+    exclude "**/module-info.class"
+    exclude "*.so"
+    exclude "*.dylib"
+    exclude "*.dll"
+    exclude "*.jnilib"
+    exclude "ibxm/**"
+    exclude "com/jcraft/**"
+    exclude "org/lwjgl/**"
+    exclude "net/java/**"
 
-reobf {
-    shadowJar {
-        mappingType = "SEARGE"
-    }
+    exclude "META-INF/proguard/**"
+    exclude "META-INF/maven/**"
+    exclude "META-INF/versions/**"
+    exclude "META-INF/com.android.tools/**"
+
+    exclude "fabric.mod.json"
 }
 
 processResources {
+    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", "1.12.2"
 
+    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include "mcmod.info"
-        expand "version":project.version, "mcversion":project.minecraft.version
+
+        // replace version and mcversion
+        expand "version": project.version, "mcversion": "1.12.2"
     }
 
+    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-tasks.reobfJar.dependsOn(shadowJar)
+//jar.finalizedBy("reobfJar")
+//tasks.reobfJar.dependsOn(tasks.shadowJar)

@@ -18,12 +18,11 @@
 
 package mynameisjeff.simpletogglesprint.commands;
 
-import club.sk1er.mods.core.ModCore;
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,32 +30,29 @@ import java.util.List;
 public class SimpleToggleSprintCommand extends CommandBase {
 
     @Override
-    public String getCommandName() {
-        return "simpletogglesprint";
-    }
-
-    @Override
-    public List<String> getCommandAliases() {
-        return Collections.singletonList("togglesprint");
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender sender) {
-        return "/" + getCommandName();
-    }
-
-    @Override
     public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return null;
+    public String getName() {
+        return "simpletogglesprint";
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) {
-        ModCore.getInstance().getGuiHandler().open(SimpleToggleSprint.config.gui());
+    public List<String> getAliases() {
+        return Collections.singletonList("togglesprint");
+    }
+
+    @Override
+    public String getUsage(ICommandSender sender) {
+        return "/" + getName();
+    }
+
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        SimpleToggleSprint.thread.submit(() -> {
+            SimpleToggleSprint.displayScreen = SimpleToggleSprint.config.gui();
+        });
     }
 }

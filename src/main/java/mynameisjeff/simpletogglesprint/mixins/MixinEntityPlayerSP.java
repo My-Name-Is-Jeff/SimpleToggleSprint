@@ -39,7 +39,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         super(worldIn, playerProfile);
     }
 
-    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
+    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"), require = 1)
     private boolean setSprintState(KeyBinding keyBinding) {
         return keyBinding.isKeyDown() || (Config.enabledToggleSprint && Config.toggleSprintState && keyBinding == this.mc.gameSettings.keyBindSprint && mc.currentScreen == null);
     }

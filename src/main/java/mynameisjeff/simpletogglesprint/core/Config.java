@@ -18,11 +18,13 @@
 
 package mynameisjeff.simpletogglesprint.core;
 
-import club.sk1er.vigilance.Vigilant;
-import club.sk1er.vigilance.data.Property;
-import club.sk1er.vigilance.data.PropertyType;
+import gg.essential.vigilance.Vigilant;
+import gg.essential.vigilance.data.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.io.File;
+import java.util.Comparator;
 
 public class Config extends Vigilant {
 
@@ -106,78 +108,43 @@ public class Config extends Vigilant {
             description = "Display a background."
     )
     public static boolean displayBackground;
-
     @Property(
-            type = PropertyType.SELECTOR,
-            name = "Color",
-            category = "Color", subcategory = "Simple",
-            description = "Choose a color for the HUD.",
-            options = {"White", "Light Gray", "Gray", "Dark Gray", "Black", "Red", "Pink", "Orange", "Yellow", "Green", "Magenta", "Cyan", "Blue", "Chroma"}
+            type = PropertyType.COLOR,
+            name = "Display Color",
+            category = "Display", subcategory = "Color",
+            description = "Changes the color of the display."
     )
-    public static int simpleColor;
+    public static Color displayStateColor = Color.WHITE;
 
     @Property(
-            type = PropertyType.SELECTOR,
-            name = "Use Simple or Advanced Color",
-            category = "Color",
-            description = "Use the Simple or Advanced option for the Color selection.",
-            options = {"Simple", "Advanced"}
-    )
-    public static int isAdvanced;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Red",
-            category = "Color", subcategory = "Advanced",
-            description = "Change the red value for the color of the display.",
-            max = 255
-    )
-    public static int displayStateRed = 255;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Green",
-            category = "Color", subcategory = "Advanced",
-            description = "Change the green value for the color of the display.",
-            max = 255
-    )
-    public static int displayStateGreen = 255;
-
-    @Property(
-            type = PropertyType.SLIDER,
-            name = "Blue",
-            category = "Color", subcategory = "Advanced",
-            description = "Change the blue value for the color of the display.",
-            max = 255
-    )
-    public static int displayStateBlue = 255;
-
-    @Property(
-            type = PropertyType.SLIDER,
+            type = PropertyType.DECIMAL_SLIDER,
             name = "X",
             category = "Display", subcategory = "Position",
             description = "Change the X value for the state display. Based on a percentage of your screen.",
-            max = 1000
+            maxF = 100f,
+            decimalPlaces = 2
     )
-    public static int displayStateX = 2;
+    public static float displayStateX = 2f;
 
     @Property(
-            type = PropertyType.SLIDER,
+            type = PropertyType.DECIMAL_SLIDER,
             name = "Y",
             category = "Display", subcategory = "Position",
             description = "Change the Y value for the state display. Based on a percentage of your screen.",
-            max = 1000
+            maxF = 100f,
+            decimalPlaces = 2
     )
-    public static int displayStateY = 974;
+    public static float displayStateY = 97.4f;
 
     @Property(
-            type = PropertyType.SLIDER,
+            type = PropertyType.DECIMAL_SLIDER,
             name = "Scale",
             category = "Display", subcategory = "Options",
             description = "Change the scale for the state display, this is a percentage.",
-            max = 5000
+            maxF = 5f,
+            decimalPlaces = 3
     )
-    public static int displayStateScale = 1085;
+    public static float displayStateScale = 1.085f;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -201,7 +168,31 @@ public class Config extends Vigilant {
     public static int displayStateAlignment = 0;
 
     public Config() {
-        super(new File("./config/simpletogglesprint.toml"));
+        super(new File("./config/simpletogglesprint.toml"), "ToggleSprint", new JVMAnnotationPropertyCollector(), new ConfigSorting());
+
+        addDependency("keybindToggleSprint", "enabledToggleSprint");
+        addDependency("keybindToggleSneak", "enabledToggleSneak");
+
+        addDependency("showInGui", "displayToggleState");
+        addDependency("displayBackground", "displayToggleState");
+        addDependency("displayStateColor", "displayToggleState");
+        addDependency("displayStateX", "displayToggleState");
+        addDependency("displayStateY", "displayToggleState");
+        addDependency("displayStateScale", "displayToggleState");
+        addDependency("displayStateShadow", "displayToggleState");
+        addDependency("displayStateAlignment", "displayToggleState");
         initialize();
+    }
+
+    private static class ConfigSorting extends SortingBehavior {
+        @NotNull
+        @Override
+        public Comparator<Category> getCategoryComparator() {
+            return (o1, o2) -> {
+                if (o1.getName().equals("General")) return -1;
+                if (o2.getName().equals("General")) return 1;
+                return o1.getName().compareTo(o2.getName());
+            };
+        }
     }
 }

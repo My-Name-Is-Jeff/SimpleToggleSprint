@@ -18,7 +18,7 @@
 
 package mynameisjeff.simpletogglesprint.mixins;
 
-import mynameisjeff.simpletogglesprint.SimpleToggleSprint;
+import gg.essential.universal.UMinecraft;
 import mynameisjeff.simpletogglesprint.core.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
@@ -34,13 +34,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MovementInputFromOptions.class)
 public abstract class MixinMovementInputFromOptions extends MovementInput {
-
     @Shadow @Final private GameSettings gameSettings;
-    @Unique private final Minecraft mc = Minecraft.getMinecraft();
+    @Unique private final Minecraft mc = UMinecraft.getMinecraft();
 
-    @Redirect(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
+    @Redirect(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"), require = 1)
     private boolean setSneakState(KeyBinding keyBinding) {
-        return keyBinding.isKeyDown() || (mc.currentScreen == null && Config.enabledToggleSneak && Config.toggleSneakState && keyBinding == this.gameSettings.keyBindSneak);
+        return keyBinding.isKeyDown() || (mc.currentScreen == null && Config.enabledToggleSneak && Config.toggleSneakState && keyBinding == gameSettings.keyBindSneak);
     }
 
 }

@@ -18,7 +18,6 @@
 
 package mynameisjeff.simpletogglesprint.mixins;
 
-import mynameisjeff.simpletogglesprint.SimpleToggleSprint;
 import mynameisjeff.simpletogglesprint.core.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;

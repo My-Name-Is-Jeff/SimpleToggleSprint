@@ -179,35 +179,35 @@ object SimpleToggleSprint {
     }
 
     @Suppress("unused")
-    private enum class DisplayState(val displayText: String, val displayCheck: Supplier<Boolean>) {
+    private enum class DisplayState(val displayText: String, val displayCheck: () -> Boolean) {
         DESCENDINGHELD(
             "[Descending (key held)]",
-            Supplier { mc.thePlayer.capabilities.isFlying && mc.thePlayer.isSneaking && sneakHeld }),
+            { mc.thePlayer.capabilities.isFlying && mc.thePlayer.isSneaking && sneakHeld }),
         DESCENDINGTOGGLED(
             "[Descending (toggled)]",
-            Supplier { mc.thePlayer.capabilities.isFlying && Config.enabledToggleSneak && Config.toggleSneakState }),
+            { mc.thePlayer.capabilities.isFlying && Config.enabledToggleSneak && Config.toggleSneakState }),
         DESCENDING(
             "[Descending (vanilla)]",
-            Supplier { mc.thePlayer.capabilities.isFlying && mc.thePlayer.isSneaking }),
-        FLYING("[Flying]", Supplier { mc.thePlayer.capabilities.isFlying }), RIDING(
+            { mc.thePlayer.capabilities.isFlying && mc.thePlayer.isSneaking }),
+        FLYING("[Flying]", { mc.thePlayer.capabilities.isFlying }), RIDING(
             "[Riding]",
-            Supplier { mc.thePlayer.isRiding }),
+            { mc.thePlayer.isRiding }),
         SNEAKHELD(
             "[Sneaking (key held)]",
-            Supplier { mc.thePlayer.isSneaking && sneakHeld }),
+            { mc.thePlayer.isSneaking && sneakHeld }),
         TOGGLESNEAK(
             "[Sneaking (toggled)]",
-            Supplier { Config.enabledToggleSneak && Config.toggleSneakState }),
-        SNEAKING("[Sneaking (vanilla)]", Supplier { mc.thePlayer.isSneaking }), SPRINTHELD(
+            { Config.enabledToggleSneak && Config.toggleSneakState }),
+        SNEAKING("[Sneaking (vanilla)]", { mc.thePlayer.isSneaking }), SPRINTHELD(
             "[Sprinting (key held)]",
-            Supplier { mc.thePlayer.isSprinting && sprintHeld }),
+            { mc.thePlayer.isSprinting && sprintHeld }),
         TOGGLESPRINT(
             "[Sprinting (toggled)]",
-            Supplier { Config.enabledToggleSprint && Config.toggleSprintState }),
-        SPRINTING("[Sprinting (vanilla)]", Supplier { mc.thePlayer.isSprinting });
+            { Config.enabledToggleSprint && Config.toggleSprintState }),
+        SPRINTING("[Sprinting (vanilla)]", { mc.thePlayer.isSprinting });
 
         val isActive: Boolean
-            get() = displayCheck.get()
+            get() = displayCheck()
 
         companion object {
             val activeDisplay: String?

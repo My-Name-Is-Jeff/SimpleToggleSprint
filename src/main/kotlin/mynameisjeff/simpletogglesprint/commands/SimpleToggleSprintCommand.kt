@@ -24,8 +24,7 @@ import mynameisjeff.simpletogglesprint.core.Config
 
 object SimpleToggleSprintCommand : Command("simpletogglesprint") {
 
-    override val commandAliases: Set<Alias>
-        get() = setOf(Alias("togglesprint"))
+    override val commandAliases = setOf(Alias("togglesprint"))
 
     @DefaultHandler
     fun execCommand() {

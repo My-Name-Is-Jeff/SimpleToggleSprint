@@ -52,7 +52,7 @@ object SimpleToggleSprint {
 
     const val MODID = "simpletogglesprint"
     const val MOD_NAME = "SimpleToggleSprint"
-    const val VERSION = "2.0"
+    const val VERSION = "2.0.1"
     val mc
         get() =  UMinecraft.getMinecraft()
     val keySprint = KeyBinding("Toggle Sprint", Keyboard.KEY_NONE, "SimpleToggleSprint")

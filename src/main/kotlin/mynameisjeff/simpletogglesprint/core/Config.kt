@@ -18,12 +18,15 @@
 package mynameisjeff.simpletogglesprint.core
 
 import gg.essential.vigilance.Vigilant
+import gg.essential.vigilance.data.Category
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
+import gg.essential.vigilance.data.SortingBehavior
 import java.awt.Color
 import java.io.File
 
-object Config : Vigilant(File("./config/simpletogglesprint.toml"), "ToggleSprint") {
+
+object Config : Vigilant(File("./config/simpletogglesprint.toml"), "ToggleSprint", sortingBehavior = ConfigSorting) {
     @Property(
         type = PropertyType.TEXT,
         name = "Last Launched Version",
@@ -195,6 +198,27 @@ object Config : Vigilant(File("./config/simpletogglesprint.toml"), "ToggleSprint
     var displayStateAlignment = 0
 
     init {
+        addDependency("keybindToggleSprint", "enabledToggleSprint")
+        addDependency("keybindToggleSneak", "enabledToggleSneak")
+
+        addDependency("showInGui", "displayToggleState")
+        addDependency("displayBackground", "displayToggleState")
+        addDependency("displayColor", "displayToggleState")
+        addDependency("displayStateX", "displayToggleState")
+        addDependency("displayStateY", "displayToggleState")
+        addDependency("displayStateScale", "displayToggleState")
+        addDependency("displayStateShadow", "displayToggleState")
+        addDependency("displayStateAlignment", "displayToggleState")
         initialize()
+    }
+
+    private object ConfigSorting : SortingBehavior() {
+        override fun getCategoryComparator(): Comparator<in Category> = Comparator { o1, o2 ->
+            if (o1.name == "General") return@Comparator -1
+            if (o2.name == "General") return@Comparator 1
+            else compareValuesBy(o1, o2) {
+                it.name
+            }
+        }
     }
 }

@@ -16,20 +16,21 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mynameisjeff.simpletogglesprint.mixins;
+package mynameisjeff.simpletogglesprint.mixins.accessors;
 
-import mynameisjeff.simpletogglesprint.core.UtilsKt;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.client.gui.FontRenderer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(MovementInputFromOptions.class)
-public abstract class MixinMovementInputFromOptions extends MovementInput {
-    @Redirect(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
-    private boolean setSneakState(KeyBinding keyBinding) {
-        return UtilsKt.shouldSetSneak(keyBinding);
-    }
+@Mixin(FontRenderer.class)
+public interface AccessorFontRenderer {
+    @Accessor("FONT_HEIGHT")
+    int getFontHeight();
+
+    @Invoker("getStringWidth")
+    int getStringWidth(String str);
+
+    @Invoker("drawString")
+    int drawString(String text, float x, float y, int color, boolean dropShadow);
 }

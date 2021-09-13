@@ -23,14 +23,14 @@ import net.minecraftforge.gradle.user.TaskSingleReobf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    kotlin("jvm") version "1.5.30"
     id("net.minecraftforge.gradle.forge") version "6f5327"
     id("com.github.johnrengelman.shadow") version "6.1.0"
-    kotlin("jvm") version "1.5.21"
     id("org.spongepowered.mixin") version "d5f9873d60"
     java
 }
 
-version = "2.0.1"
+version = "2.1.0"
 group = "mynameisjeff.simpletogglesprint"
 
 minecraft {
@@ -73,8 +73,8 @@ val shadowMe: Configuration by configurations.creating {
 dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
 
-    shadowMe("gg.essential:loader-launchwrapper:1.1.0")
-    implementation("gg.essential:essential-1.8.9-forge:1282")
+    shadowMe("gg.essential:loader-launchwrapper:1.1.1")
+    implementation("gg.essential:essential-1.8.9-forge:1429+release-launch-1.17")
 }
 
 mixin {

@@ -18,6 +18,7 @@
 
 package mynameisjeff.simpletogglesprint.tweaker
 
+import mynameisjeff.simpletogglesprint.core.is1_12_2
 import net.minecraftforge.fml.relauncher.CoreModManager
 import org.spongepowered.asm.lib.tree.ClassNode
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin
@@ -35,8 +36,10 @@ class MixinPlugin : IMixinConfigPlugin {
         }
     }
 
-    override fun getRefMapperConfig(): String? {
-        return null
+    override fun getRefMapperConfig(): String {
+        val refMap = if (is1_12_2) "mixins.simpletogglesprint1_12.refmap.json" else "mixins.simpletogglesprint.refmap.json"
+        println("Using refmap $refMap")
+        return refMap
     }
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean {

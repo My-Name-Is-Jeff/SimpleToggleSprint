@@ -46,7 +46,7 @@ object SimpleToggleSprint {
 
     const val MODID = "simpletogglesprint"
     const val MOD_NAME = "SimpleToggleSprint"
-    const val VERSION = "2.1.0"
+    const val VERSION = "2.1.1"
     val player
         get() = UMinecraft.getPlayer()
     val gameSettings
@@ -154,18 +154,18 @@ object SimpleToggleSprint {
     }
 
     @Suppress("unused")
-    private enum class DisplayState(val displayText: String, val displayCheck: (AccessorEntityPlayer) -> Boolean) {
-        DESCENDINGHELD("[Descending (key held)]", { (it.capabilities as AccessorPlayerCapabilities).isFlying && it.isSneaking && sneakHeld }),
-        DESCENDINGTOGGLED("[Descending (toggled)]", { (it.capabilities as AccessorPlayerCapabilities).isFlying && Config.enabledToggleSneak && Config.toggleSneakState }),
-        DESCENDING("[Descending (vanilla)]", { (it.capabilities as AccessorPlayerCapabilities).isFlying && it.isSneaking }),
-        FLYING("[Flying]", { (it.capabilities as AccessorPlayerCapabilities).isFlying }),
-        RIDING("[Riding]", { it.isRiding }),
-        SNEAKHELD("[Sneaking (key held)]", { it.isSneaking && sneakHeld }),
-        TOGGLESNEAK("[Sneaking (toggled)]", { Config.enabledToggleSneak && Config.toggleSneakState }),
-        SNEAKING("[Sneaking (vanilla)]", { it.isSneaking }),
-        SPRINTHELD("[Sprinting (key held)]", { it.isSprinting && sprintHeld }),
-        TOGGLESPRINT("[Sprinting (toggled)]", { Config.enabledToggleSprint && Config.toggleSprintState }),
-        SPRINTING("[Sprinting (vanilla)]", { it.isSprinting });
+    private enum class DisplayState(val displayText: () -> String, val displayCheck: (AccessorEntityPlayer) -> Boolean) {
+        DESCENDINGHELD({ Config.descendingHeld }, { (it.capabilities as AccessorPlayerCapabilities).isFlying && it.isSneaking && sneakHeld }),
+        DESCENDINGTOGGLED({ Config.descendingToggled }, { (it.capabilities as AccessorPlayerCapabilities).isFlying && Config.enabledToggleSneak && Config.toggleSneakState }),
+        DESCENDING({ Config.descending }, { (it.capabilities as AccessorPlayerCapabilities).isFlying && it.isSneaking }),
+        FLYING({ Config.flying }, { (it.capabilities as AccessorPlayerCapabilities).isFlying }),
+        RIDING({ Config.riding }, { it.isRiding }),
+        SNEAKHELD({ Config.sneakHeld }, { it.isSneaking && sneakHeld }),
+        TOGGLESNEAK({ Config.sneakToggle }, { Config.enabledToggleSneak && Config.toggleSneakState }),
+        SNEAKING({ Config.sneak }, { it.isSneaking }),
+        SPRINTHELD({ Config.sprintHeld }, { it.isSprinting && sprintHeld }),
+        TOGGLESPRINT({ Config.sprintToggle }, { Config.enabledToggleSprint && Config.toggleSprintState }),
+        SPRINTING({ Config.sprint }, { it.isSprinting });
 
         val isActive: Boolean
             get() = displayCheck(player!! as AccessorEntityPlayer)
@@ -174,7 +174,7 @@ object SimpleToggleSprint {
             val activeDisplay: String?
                 get() {
                     if (player == null) return null
-                    return values().find { it.isActive }?.displayText
+                    return values().find { it.isActive }?.displayText?.invoke()
                 }
         }
     }

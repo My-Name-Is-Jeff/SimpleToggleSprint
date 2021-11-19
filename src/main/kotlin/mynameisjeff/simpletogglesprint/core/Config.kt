@@ -197,6 +197,105 @@ object Config : Vigilant(File("./config/simpletogglesprint.toml"), "ToggleSprint
     )
     var displayStateAlignment = 0
 
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Descending Held Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Descending Held text."
+    )
+    var descendingHeld = "[Descending (key held)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Descending Toggled Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Descending Toggled text."
+    )
+    var descendingToggled = "[Descending (toggled)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Descending Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Descending text."
+    )
+    var descending = "[Descending (vanilla)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Flying Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Flying text."
+    )
+    var flying = "[Flying]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Riding Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Riding text."
+    )
+    var riding = "[Riding]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Sneak Held Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Sneak Held text."
+    )
+    var sneakHeld = "[Sneaking (key held)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Sneak Toggle Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Sneak Toggle text."
+    )
+    var sneakToggle = "[Sneaking (toggled)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Sneaking Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Sneaking text."
+    )
+    var sneak = "[Sneaking (vanilla)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Sprint Held Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Sprint Held text."
+    )
+    var sprintHeld = "[Sprinting (key held)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Sprint Toggle Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Sprint Toggle text."
+    )
+    var sprintToggle = "[Sprinting (toggled)]"
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Sprinting Text",
+        category = "Display",
+        subcategory = "Text",
+        description = "Change the Sprinting text."
+    )
+    var sprint = "[Sprinting (vanilla)]"
+
     init {
         addDependency("keybindToggleSprint", "enabledToggleSprint")
         addDependency("keybindToggleSneak", "enabledToggleSneak")

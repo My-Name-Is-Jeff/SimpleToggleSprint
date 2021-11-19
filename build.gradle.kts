@@ -30,7 +30,7 @@ plugins {
     java
 }
 
-version = "2.1.0"
+version = "2.1.1"
 group = "mynameisjeff.simpletogglesprint"
 
 minecraft {
@@ -74,7 +74,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
 
     shadowMe("gg.essential:loader-launchwrapper:1.1.1")
-    implementation("gg.essential:essential-1.8.9-forge:1429+release-launch-1.17")
+    implementation("gg.essential:essential-1.8.9-forge:1567+release-launch")
 }
 
 mixin {

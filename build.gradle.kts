@@ -23,7 +23,7 @@ import net.minecraftforge.gradle.user.TaskSingleReobf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.6.10"
     id("net.minecraftforge.gradle.forge") version "6f5327"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.spongepowered.mixin") version "d5f9873d60"
@@ -39,31 +39,23 @@ minecraft {
     mappings = "stable_22"
     makeObfSourceJar = false
     isGitVersion = false
-    clientJvmArgs.addAll(
-            setOf(
-                    "-Delementa.dev=true",
-                    "-Delementa.debug=true"
-            )
+    clientJvmArgs + arrayOf(
+        "-Delementa.dev=true",
+        "-Delementa.debug=true"
     )
-    clientRunArgs.addAll(
-            setOf(
-                    "--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker",
-                    "--mixin mixins.simpletogglesprint.json"
-            )
+    clientRunArgs + arrayOf(
+        "--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker",
+        "--mixin mixins.simpletogglesprint.json"
     )
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
-    setOf(
-            "https://repo.spongepowered.org/repository/maven-public/",
-            "https://repo.sk1er.club/repository/maven-public/",
-            "https://repo.sk1er.club/repository/maven-releases/",
-            "https://jitpack.io"
-    ).forEach {
-        maven(it)
-    }
+    maven("https://repo.spongepowered.org/repository/maven-public/")
+    maven("https://repo.sk1er.club/repository/maven-public/")
+    maven("https://repo.sk1er.club/repository/maven-releases/")
+    maven("https://jitpack.io")
 }
 
 val shadowMe: Configuration by configurations.creating {
@@ -72,9 +64,10 @@ val shadowMe: Configuration by configurations.creating {
 
 dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
 
-    shadowMe("gg.essential:loader-launchwrapper:1.1.1")
-    implementation("gg.essential:essential-1.8.9-forge:1429+release-launch-1.17")
+    shadowMe("gg.essential:loader-launchwrapper:1.1.3")
+    implementation("gg.essential:essential-1.8.9-forge:1709")
 }
 
 mixin {
@@ -87,6 +80,14 @@ sourceSets {
     main {
         ext["refmap"] = "mixins.simpletogglesprint.refmap.json"
         output.setResourcesDir(file("${buildDir}/classes/kotlin/main"))
+    }
+}
+
+configure<NamedDomainObjectContainer<IReobfuscator>> {
+    clear()
+    create("shadowJar") {
+        mappingType = SEARGE
+        classpath = sourceSets.main.get().compileClasspath
     }
 }
 
@@ -103,14 +104,14 @@ tasks {
         archiveBaseName.set("SimpleToggleSprint")
         manifest {
             attributes(
-                    mapOf(
-                            "FMLCorePluginContainsFMLMod" to true,
-                            "ForceLoadAsMod" to true,
-                            "MixinConfigs" to "mixins.simpletogglesprint.json",
-                            "ModSide" to "CLIENT",
-                            "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",
-                            "TweakOrder" to "0"
-                    )
+                mapOf(
+                    "FMLCorePluginContainsFMLMod" to true,
+                    "ForceLoadAsMod" to true,
+                    "MixinConfigs" to "mixins.simpletogglesprint.json",
+                    "ModSide" to "CLIENT",
+                    "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",
+                    "TweakOrder" to "0"
+                )
             )
         }
         enabled = false
@@ -121,19 +122,19 @@ tasks {
         configurations = listOf(shadowMe)
 
         exclude(
-                "**/LICENSE.md",
-                "**/LICENSE.txt",
-                "**/LICENSE",
-                "**/NOTICE",
-                "**/NOTICE.txt",
-                "pack.mcmeta",
-                "dummyThing",
-                "**/module-info.class",
-                "META-INF/proguard/**",
-                "META-INF/maven/**",
-                "META-INF/versions/**",
-                "META-INF/com.android.tools/**",
-                "fabric.mod.json"
+            "**/LICENSE.md",
+            "**/LICENSE.txt",
+            "**/LICENSE",
+            "**/NOTICE",
+            "**/NOTICE.txt",
+            "pack.mcmeta",
+            "dummyThing",
+            "**/module-info.class",
+            "META-INF/proguard/**",
+            "META-INF/maven/**",
+            "META-INF/versions/**",
+            "META-INF/com.android.tools/**",
+            "fabric.mod.json"
         )
         mergeServiceFiles()
     }
@@ -145,16 +146,13 @@ tasks {
             jvmTarget = "1.8"
             freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
         }
+        kotlinDaemonJvmArguments.set(listOf("-Xmx2G", "-Dkotlin.enableCacheBuilding=true", "-Dkotlin.useParallelTasks=true", "-Dkotlin.enableFastIncremental=true"))
     }
     named<TaskSingleReobf>("reobfJar") {
-        dependsOn(shadowJar)
+        enabled = false
     }
-}
-
-configure<NamedDomainObjectContainer<IReobfuscator>> {
-    create("shadowJar") {
-        mappingType = SEARGE
-        classpath = sourceSets.main.get().compileClasspath
+    named<TaskSingleReobf>("reobfShadowJar") {
+        mustRunAfter(shadowJar)
     }
 }
 

@@ -20,6 +20,8 @@ package mynameisjeff.simpletogglesprint
 import gg.essential.universal.*
 import mynameisjeff.simpletogglesprint.commands.SimpleToggleSprintCommand
 import mynameisjeff.simpletogglesprint.core.*
+import mynameisjeff.simpletogglesprint.platform.isRiding
+import mynameisjeff.simpletogglesprint.platform.renderOrdinal
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.entity.player.EntityPlayer
@@ -108,7 +110,7 @@ object SimpleToggleSprint {
 
     @SubscribeEvent
     fun onRenderGameOverlay(event: RenderGameOverlayEvent.Post) {
-        if (event.type.ordinal != if (!is1_12_2) 9 else 10) return
+        if (event.type.ordinal != renderOrdinal) return
         if (Config.displayToggleState && (UScreen.currentScreen == null || Config.showInGui) && player != null) {
             val sr = UResolution
             val fr = UMinecraft.getFontRenderer()

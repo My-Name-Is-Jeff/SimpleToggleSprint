@@ -19,7 +19,6 @@
 package mynameisjeff.simpletogglesprint.tweaker
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap
-import mynameisjeff.simpletogglesprint.core.is1_12_2
 import net.minecraftforge.fml.relauncher.CoreModManager
 import org.objectweb.asm.tree.ClassNode
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin

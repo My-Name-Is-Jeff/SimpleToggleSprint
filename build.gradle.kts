@@ -51,6 +51,10 @@ loom {
             property("mixin.debug.export", "true")
             property("mixin.dumpTargetOnFailure", "true")
             property("fml.debugAccessTransformer", "true")
+            property("fml.remappingDebug", "true")
+            property("fml.remappingDebug.dumpFieldMaps", "true")
+            property("fml.remappingDebug.dumpMethodMaps", "true")
+            property("fml.coreMods.load", "mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin")
             programArgs("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
             programArgs("--mixin", "mixins.simpletogglesprint.json")
         }
@@ -115,6 +119,7 @@ tasks {
             attributes(
                 mapOf(
                     "FMLAT" to "accesstransformer.cfg",
+                    "FMLCorePlugin" to "mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin",
                     "FMLCorePluginContainsFMLMod" to true,
                     "ForceLoadAsMod" to true,
                     "MixinConfigs" to "mixins.simpletogglesprint.json",

@@ -21,25 +21,8 @@ package mynameisjeff.simpletogglesprint.core
 import gg.essential.universal.UKeyboard
 import gg.essential.universal.UScreen
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint.gameSettings
-import net.minecraft.client.gui.Gui
 import net.minecraft.client.settings.KeyBinding
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraftforge.common.ForgeVersion
 import org.lwjgl.input.Mouse
-import java.lang.invoke.MethodHandle
-import java.lang.invoke.MethodHandles
-import java.lang.invoke.MethodType
-import kotlin.reflect.full.staticProperties
-
-val is1_12_2 by lazy {
-    (ForgeVersion::class.staticProperties.find { 
-        it.name == "mcVersion"
-    }!!.get() as String).startsWith("1.12")
-}
-
-val isRiding1_12: MethodHandle by lazy {
-    MethodHandles.publicLookup().findVirtual(EntityPlayer::class.java, "func_184218_aH", MethodType.methodType(Boolean::class.javaPrimitiveType))
-}
 
 fun shouldSetSprint(keyBinding: KeyBinding): Boolean {
     return keyBinding.isKeyDown || UScreen.currentScreen == null && Config.enabledToggleSprint && Config.toggleSprintState && keyBinding === gameSettings.keyBindSprint
@@ -52,5 +35,3 @@ fun shouldSetSneak(keyBinding: KeyBinding): Boolean {
 fun checkKeyCode(keyCode: Int) = if (keyCode > 0) UKeyboard.isKeyDown(keyCode) else Mouse.isButtonDown(
     keyCode + 100
 )
-
-fun isRiding(entity: EntityPlayer): Boolean = if (!is1_12_2) entity.isRiding else isRiding1_12.invokeExact(entity) as Boolean

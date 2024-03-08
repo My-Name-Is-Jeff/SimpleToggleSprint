@@ -20,7 +20,7 @@ package mynameisjeff.simpletogglesprint.tweaker
 
 import mynameisjeff.simpletogglesprint.core.is1_12_2
 import net.minecraftforge.fml.relauncher.CoreModManager
-import org.spongepowered.asm.lib.tree.ClassNode
+import org.objectweb.asm.tree.ClassNode
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo
 
@@ -54,18 +54,18 @@ class MixinPlugin : IMixinConfigPlugin {
     }
 
     override fun preApply(
-        targetClassName: String,
-        targetClass: ClassNode,
-        mixinClassName: String,
-        mixinInfo: IMixinInfo
+        targetClassName: String?,
+        targetClass: ClassNode?,
+        mixinClassName: String?,
+        mixinInfo: IMixinInfo?
     ) {
     }
 
     override fun postApply(
-        targetClassName: String,
-        targetClass: ClassNode,
-        mixinClassName: String,
-        mixinInfo: IMixinInfo
+        targetClassName: String?,
+        targetClass: ClassNode?,
+        mixinClassName: String?,
+        mixinInfo: IMixinInfo?
     ) {
     }
 }

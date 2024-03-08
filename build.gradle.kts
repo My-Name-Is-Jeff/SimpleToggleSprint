@@ -17,36 +17,50 @@
  */
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.minecraftforge.gradle.user.IReobfuscator
-import net.minecraftforge.gradle.user.ReobfMappingType.SEARGE
-import net.minecraftforge.gradle.user.TaskSingleReobf
+import net.fabricmc.loom.task.RemapJarTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("net.minecraftforge.gradle.forge") version "6f5327"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.spongepowered.mixin") version "d5f9873d60"
-    java
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.serialization") version "1.9.23"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("net.kyori.blossom") version "2.1.0"
+    id("io.github.juuxel.loom-quiltflower") version "1.10.0"
+    id("gg.essential.loom") version "1.3.12"
+    id("gg.essential.defaults") version "0.3.0"
+    idea
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
 }
 
 version = "2.2.0"
 group = "mynameisjeff.simpletogglesprint"
 
-minecraft {
-    version = "1.8.9-11.15.1.2318-1.8.9"
-    runDir = "run"
-    mappings = "stable_22"
-    makeObfSourceJar = false
-    isGitVersion = false
-    clientJvmArgs + arrayOf(
-        "-Delementa.dev=true",
-        "-Delementa.debug=true"
-    )
-    clientRunArgs + arrayOf(
-        "--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker",
-        "--mixin mixins.simpletogglesprint.json"
-    )
+quiltflower {
+    quiltflowerVersion.set("1.9.0")
+}
+
+loom {
+    silentMojangMappingsLicense()
+    runConfigs {
+        getByName("client") {
+            isIdeConfigGenerated = true
+            property("elementa.dev", "true")
+            property("elementa.debug", "true")
+            property("elementa.invalid_usage", "warn")
+            property("mixin.debug.verbose", "true")
+            property("mixin.debug.export", "true")
+            property("mixin.dumpTargetOnFailure", "true")
+            programArgs("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
+            programArgs("--mixin", "mixins.simpletogglesprint.json")
+        }
+        remove(getByName("server"))
+    }
+    forge {
+        mixinConfig("mixins.simpletogglesprint.json")
+    }
+    mixin {
+        defaultRefmapName = "mixins.simpletogglesprint.refmap.json"
+    }
 }
 
 repositories {
@@ -63,45 +77,37 @@ val shadowMe: Configuration by configurations.creating {
 }
 
 dependencies {
-    annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
-    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileOnly("org.spongepowered:mixin:0.8.5")
 
-    shadowMe("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:1709")
-}
 
-mixin {
-    disableRefMapWarning = true
-    defaultObfuscationEnv = searge
-    add(sourceSets.main.get(), "mixins.simpletogglesprint.refmap.json")
+    shadowMe("gg.essential:loader-launchwrapper:1.2.2")
+    implementation("gg.essential:essential-1.8.9-forge:14616+g169bd9af6a")
 }
 
 sourceSets {
     main {
-        ext["refmap"] = "mixins.simpletogglesprint.refmap.json"
-        output.setResourcesDir(file("${buildDir}/classes/kotlin/main"))
+        output.setResourcesDir(layout.buildDirectory.file("/classes/kotlin/main"))
+        blossom {
+            javaSources {
+                property("version", project.version.toString())
+            }
+            resources {
+                property("version", project.version.toString())
+                property("mcversion", "1.8.9")
+            }
+        }
     }
-}
 
-configure<NamedDomainObjectContainer<IReobfuscator>> {
-    clear()
-    create("shadowJar") {
-        mappingType = SEARGE
-        classpath = sourceSets.main.get().compileClasspath
-    }
 }
 
 tasks {
     processResources {
-        inputs.property("version", project.version)
-        inputs.property("mcversion", project.minecraft.version)
-
-        filesMatching("mcmod.info") {
-            expand(mapOf("version" to project.version, "mcversion" to project.minecraft.version))
-        }
+        dependsOn(compileJava)
     }
     named<Jar>("jar") {
         archiveBaseName.set("SimpleToggleSprint")
+
         manifest {
             attributes(
                 mapOf(
@@ -109,15 +115,18 @@ tasks {
                     "ForceLoadAsMod" to true,
                     "MixinConfigs" to "mixins.simpletogglesprint.json",
                     "ModSide" to "CLIENT",
+                    "ModType" to "FML",
                     "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",
                     "TweakOrder" to "0"
                 )
             )
         }
+
         enabled = false
     }
     named<ShadowJar>("shadowJar") {
         archiveFileName.set(jar.get().archiveFileName)
+        archiveClassifier.set("dev")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         configurations = listOf(shadowMe)
 
@@ -138,23 +147,25 @@ tasks {
         )
         mergeServiceFiles()
     }
+    named<RemapJarTask>("remapJar") {
+        inputFile.set(shadowJar.get().archiveFile)
+    }
+    withType<AbstractArchiveTask> {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
     withType<JavaCompile> {
         options.encoding = "UTF-8"
     }
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+            freeCompilerArgs = listOf("-Xjvm-default=all", "-Xbackend-threads=0")
         }
-        kotlinDaemonJvmArguments.set(listOf("-Xmx2G", "-Dkotlin.enableCacheBuilding=true", "-Dkotlin.useParallelTasks=true", "-Dkotlin.enableFastIncremental=true"))
-    }
-    named<TaskSingleReobf>("reobfJar") {
-        enabled = false
-    }
-    named<TaskSingleReobf>("reobfShadowJar") {
-        mustRunAfter(shadowJar)
+        kotlinDaemonJvmArguments.set(listOf("-Xmx2G"))
     }
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+kotlin {
+    jvmToolchain(8)
+}

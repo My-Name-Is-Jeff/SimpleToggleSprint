@@ -44,9 +44,9 @@ import java.awt.Color
 )
 object SimpleToggleSprint {
 
-    const val MODID = "simpletogglesprint"
-    const val MOD_NAME = "SimpleToggleSprint"
-    const val VERSION = "2.2.0"
+    const val MODID = Reference.MOD_ID
+    const val MOD_NAME = Reference.MOD_NAME
+    const val VERSION = Reference.VERSION
     val player
         get() = UMinecraft.getPlayer()
     val gameSettings

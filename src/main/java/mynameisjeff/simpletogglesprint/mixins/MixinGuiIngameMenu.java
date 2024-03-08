@@ -33,18 +33,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinGuiIngameMenu extends GuiScreen {
 
     @Unique
-    private GuiButton configButton;
+    private GuiButton simpleToggleSprint$configButton;
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void addGuiButtons(CallbackInfo ci) {
         if (Config.showConfigOnEscape) {
-            this.buttonList.add(configButton = new GuiButton(-69420, 2, this.height - 82, 100, 20, "ToggleSprint"));
+            this.buttonList.add(simpleToggleSprint$configButton = new GuiButton(-69420, 2, this.height - 82, 100, 20, "ToggleSprint"));
         }
     }
 
     @Inject(method = "actionPerformed", at = @At("TAIL"))
     private void onButtonPress(GuiButton button, CallbackInfo ci) {
-        if (button == configButton) {
+        if (button == simpleToggleSprint$configButton) {
             EssentialAPI.getGuiUtil().openScreen(Config.INSTANCE.gui());
         }
     }

@@ -50,6 +50,7 @@ loom {
             property("mixin.debug.verbose", "true")
             property("mixin.debug.export", "true")
             property("mixin.dumpTargetOnFailure", "true")
+            property("fml.debugAccessTransformer", "true")
             programArgs("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
             programArgs("--mixin", "mixins.simpletogglesprint.json")
         }
@@ -57,6 +58,7 @@ loom {
     }
     forge {
         mixinConfig("mixins.simpletogglesprint.json")
+        accessTransformer("src/main/resources/META-INF/accesstransformer.cfg")
     }
     mixin {
         defaultRefmapName = "mixins.simpletogglesprint.refmap.json"
@@ -112,6 +114,7 @@ tasks {
         manifest {
             attributes(
                 mapOf(
+                    "FMLAT" to "accesstransformer.cfg",
                     "FMLCorePluginContainsFMLMod" to true,
                     "ForceLoadAsMod" to true,
                     "MixinConfigs" to "mixins.simpletogglesprint.json",

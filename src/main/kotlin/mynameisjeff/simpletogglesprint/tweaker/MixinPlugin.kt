@@ -39,11 +39,7 @@ class MixinPlugin : IMixinConfigPlugin {
         }
     }
 
-    override fun getRefMapperConfig(): String {
-        val refMap = if (is1_12_2) "mixins.simpletogglesprint1_12.refmap.json" else "mixins.simpletogglesprint.refmap.json"
-        println("Using refmap $refMap")
-        return refMap
-    }
+    override fun getRefMapperConfig(): String? = null
 
     override fun shouldApplyMixin(targetClassName: String, mixinClassName: String): Boolean {
         return if (mixinClassName.startsWith("mynameisjeff.simpletogglesprint.mixins.playerapi.")) {
@@ -52,9 +48,7 @@ class MixinPlugin : IMixinConfigPlugin {
     }
 
     override fun acceptTargets(myTargets: Set<String>, otherTargets: Set<String>) {}
-    override fun getMixins(): List<String>? {
-        return null
-    }
+    override fun getMixins(): List<String>? = null
 
     override fun preApply(
         targetClassName: String?,

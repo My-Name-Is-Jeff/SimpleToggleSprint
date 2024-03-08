@@ -3,13 +3,6 @@
   "package": "mynameisjeff.simpletogglesprint.mixins",
   "plugin": "mynameisjeff.simpletogglesprint.tweaker.MixinPlugin",
   "mixins": [
-    "accessors.AccessorEntity",
-    "accessors.AccessorEntityPlayer",
-    "accessors.AccessorFontRenderer",
-    "accessors.AccessorGameSettings",
-    "accessors.AccessorKeybinding",
-    "accessors.AccessorPlayerCapabilities",
-    "accessors.AccessorRenderGameOverlayEvent",
     "MixinEntityPlayerSP",
     "MixinGuiIngameMenu",
     "MixinMovementInputFromOptions",

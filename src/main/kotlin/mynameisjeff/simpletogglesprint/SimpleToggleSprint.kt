@@ -171,10 +171,14 @@ object SimpleToggleSprint {
             get() = displayCheck(player!! as AccessorEntityPlayer)
 
         companion object {
+            private val items by lazy {
+                return@lazy if (KotlinVersion.CURRENT.isAtLeast(1, 9)) entries else values().toList()
+            }
+
             val activeDisplay: String?
                 get() {
                     if (player == null) return null
-                    return values().find { it.isActive }?.displayText?.invoke()
+                    return items.find { it.isActive }?.displayText?.invoke()
                 }
         }
     }

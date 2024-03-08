@@ -38,11 +38,11 @@ val is1_12_2 by lazy {
 }
 
 val drawRect1_12: MethodHandle by lazy {
-    MethodHandles.publicLookup().findStatic(Gui::class.java,"drawRect", MethodType.methodType(Void.TYPE, Int::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java))
+    MethodHandles.publicLookup().findStatic(Gui::class.java,"drawRect", MethodType.methodType(Void.TYPE, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType))
 }
 
 val isRiding1_12: MethodHandle by lazy {
-    MethodHandles.publicLookup().findVirtual(EntityPlayer::class.java, "func_184218_aH", MethodType.methodType(Boolean::class.java))
+    MethodHandles.publicLookup().findVirtual(EntityPlayer::class.java, "func_184218_aH", MethodType.methodType(Boolean::class.javaPrimitiveType))
 }
 
 fun shouldSetSprint(keyBinding: KeyBinding): Boolean {

@@ -20,6 +20,7 @@ package mynameisjeff.simpletogglesprint
 import gg.essential.universal.*
 import mynameisjeff.simpletogglesprint.commands.SimpleToggleSprintCommand
 import mynameisjeff.simpletogglesprint.core.*
+import net.minecraft.client.gui.Gui
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -129,7 +130,7 @@ object SimpleToggleSprint {
             )
             if (Config.displayBackground) {
                 UGraphics.GL.translate(0f, 0f, -1f)
-                drawRect(
+                Gui.drawRect(
                     xOffset.toInt() - 2,
                     -2,
                     xOffset.toInt() + fr.getStringWidth(active) + 1,

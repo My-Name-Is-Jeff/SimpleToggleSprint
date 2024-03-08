@@ -18,6 +18,7 @@
 
 package mynameisjeff.simpletogglesprint.tweaker
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap
 import mynameisjeff.simpletogglesprint.core.is1_12_2
 import net.minecraftforge.fml.relauncher.CoreModManager
 import org.objectweb.asm.tree.ClassNode
@@ -27,6 +28,8 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo
 class MixinPlugin : IMixinConfigPlugin {
     private var hasPlayerAPI = false
     override fun onLoad(mixinPackage: String) {
+        MixinExtrasBootstrap.init()
+
         for ((key, value) in CoreModManager.getTransformers()) {
             if (key.startsWith("PlayerAPIPlugin") && value.contains("api.player.forge.PlayerAPITransformer")) {
                 println("PlayerAPI detected.")

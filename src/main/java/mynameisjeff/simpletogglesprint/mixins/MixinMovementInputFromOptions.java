@@ -18,18 +18,19 @@
 
 package mynameisjeff.simpletogglesprint.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mynameisjeff.simpletogglesprint.core.UtilsKt;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MovementInputFromOptions.class)
 public abstract class MixinMovementInputFromOptions extends MovementInput {
-    @Redirect(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
-    private boolean setSneakState(KeyBinding keyBinding) {
-        return UtilsKt.shouldSetSneak(keyBinding);
+    @WrapOperation(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
+    private boolean setSneakState(KeyBinding keyBinding, Operation<Boolean> original) {
+        return UtilsKt.shouldSetSneak(keyBinding) || original.call(keyBinding);
     }
 }

@@ -77,6 +77,7 @@ val shadowMe: Configuration by configurations.creating {
 }
 
 dependencies {
+    shadowMe(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5")!!)
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5")
 
@@ -129,6 +130,8 @@ tasks {
         archiveClassifier.set("dev")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         configurations = listOf(shadowMe)
+
+        relocate("com.llamalad7.mixinextras", "mynameisjeff.simpletogglesprint.mixinextras")
 
         exclude(
             "**/LICENSE.md",

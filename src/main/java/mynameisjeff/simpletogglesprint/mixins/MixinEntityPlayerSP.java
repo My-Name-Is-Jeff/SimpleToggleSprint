@@ -18,6 +18,8 @@
 
 package mynameisjeff.simpletogglesprint.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.authlib.GameProfile;
 import mynameisjeff.simpletogglesprint.core.UtilsKt;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -26,7 +28,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(EntityPlayerSP.class)
 public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
@@ -35,8 +36,8 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         super(worldIn, playerProfile);
     }
 
-    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
-    private boolean setSprintState(KeyBinding keyBinding) {
-        return UtilsKt.shouldSetSprint(keyBinding);
+    @WrapOperation(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
+    private boolean setSprintState(KeyBinding keyBinding, Operation<Boolean> original) {
+        return UtilsKt.shouldSetSprint(keyBinding) || original.call(keyBinding);
     }
 }

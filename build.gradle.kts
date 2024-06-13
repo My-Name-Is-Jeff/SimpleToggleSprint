@@ -56,12 +56,12 @@ loom {
             property("fml.remappingDebug.dumpMethodMaps", "true")
             property("fml.coreMods.load", "mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin")
             programArgs("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
-            programArgs("--mixin", "mixins.simpletogglesprint.json")
+            programArgs("--mixin", "mixins.simpletogglesprint.json", "mixins.simpletogglesprint-init.json")
         }
         remove(getByName("server"))
     }
     forge {
-        mixinConfig("mixins.simpletogglesprint.json")
+        mixinConfig("mixins.simpletogglesprint.json", "mixins.simpletogglesprint-init.json")
         accessTransformer("src/main/resources/META-INF/accesstransformer.cfg")
     }
     mixin {
@@ -122,7 +122,7 @@ tasks {
                     "FMLCorePlugin" to "mynameisjeff.simpletogglesprint.tweaker.FMLLoadingPlugin",
                     "FMLCorePluginContainsFMLMod" to true,
                     "ForceLoadAsMod" to true,
-                    "MixinConfigs" to "mixins.simpletogglesprint.json",
+                    "MixinConfigs" to "mixins.simpletogglesprint.json,mixins.simpletogglesprint-init.json",
                     "ModSide" to "CLIENT",
                     "ModType" to "FML",
                     "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",

@@ -1,0 +1,7 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "mynameisjeff.simpletogglesprint.mixins.init",
+  "plugin": "mynameisjeff.simpletogglesprint.tweaker.InitMixinPlugin",
+  "target": "@env(PREINIT)",
+  "verbose": true
+}

@@ -32,7 +32,7 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
 }
 
-version = "2.3.0"
+version = "2.4.0"
 group = "mynameisjeff.simpletogglesprint"
 
 quiltflower {
